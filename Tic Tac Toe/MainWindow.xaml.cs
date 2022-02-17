@@ -73,6 +73,7 @@ namespace Tic_Tac_Toe
         }
 
         #endregion
+
         /// <summary>
         /// To Update a clicked cell/button with an appropriate marker
         /// </summary>
@@ -90,12 +91,12 @@ namespace Tic_Tac_Toe
 
             if (!GameOver && PlayerTurn)
             {
-
                 //Find row and column of the clicked cell/button
                 int row = Grid.GetRow(button);          
                 int column = Grid.GetColumn(button);
                 int index = column + (row * 3);         //Calculate the index for the Results array
 
+                //If the cell is not Free return
                 if (Results[index] != MarkType.Free)
                     return;
 
@@ -103,17 +104,18 @@ namespace Tic_Tac_Toe
                 button.Content = "X";                   //Update the button content
                 PlayerTurn = false;                     //Computer to play next
 
-                CheckForWinner();
+                CheckForWinner();                       //Check if the player won already
             }
 
             if (!GameOver && !PlayerTurn)
             {
-                ComputerPlay();
-                CheckForWinner();
+                ComputerPlay();                         //It's is the computer's turn to play
+                CheckForWinner();                       //Check if the computer won already
             }
 
         }
 
+        #region Supporting Methods
         /// <summary>
         /// To manage the computer play
         /// </summary>
@@ -141,10 +143,8 @@ namespace Tic_Tac_Toe
                 else
                 {
                     num = rand.Next(0, 9);
-                }
-                
+                } 
             }
-            
         }
 
         /// <summary>
@@ -182,7 +182,6 @@ namespace Tic_Tac_Toe
                     break;
                 }
             }
-
             return Btn;     //Return the right button picked by the computer
         }
 
@@ -257,15 +256,18 @@ namespace Tic_Tac_Toe
             //-------------------------------------If There is no winner---------------------------------
             bool NoWinner = false;
 
+            //Search for Free cells
             for (int i = 0; i < Results.Length; i++)
             {
                 if (Results[i] == MarkType.Free)
                     return;
 
+                //If there is no free cell, it means there is no winner
                 if (i + 1>= Results.Length)
                     NoWinner = true;
             }
 
+            //If the Game has not ended, no free cells, and there is no winner, Highlight the whole board with orange
             if (!GameOver && NoWinner)
             {
                 Container.Children.Cast<Button>().ToList().ForEach(button =>
@@ -275,5 +277,7 @@ namespace Tic_Tac_Toe
                 });
             }
         }
+
+        #endregion
     }
 }
