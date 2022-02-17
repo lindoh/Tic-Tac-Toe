@@ -74,7 +74,7 @@ namespace Tic_Tac_Toe
 
         #endregion
         /// <summary>
-        /// To Update a clicke cell/button with an appropriate marker
+        /// To Update a clicked cell/button with an appropriate marker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -95,7 +95,7 @@ namespace Tic_Tac_Toe
                 PlayerTurn = false;                     //Computer to play next
             }
             
-            ComputerPlay();       //It is the computer's turn
+            
 
         }
 
@@ -108,36 +108,37 @@ namespace Tic_Tac_Toe
             Random rand = new();
             int num = rand.Next(0, 9);
 
-            if (!PlayerTurn)
-            {
-                while (!ValidMove)
+            while (!ValidMove)
                 {
-                    //If the cell is Free
-                    if (Results[num] == MarkType.Free)
-                    {
-                        button = FindButton(num);
-                        Results[num] = MarkType.Nought;     //Update the results array
-                        button.Content = "0";               //Display a Nought on the computer's cell
-                        button.Foreground = Brushes.Red;
-                        ValidMove = true;                   //Exit the loop, a free a cell has been found and updated
-                    }
-                    else
-                    {
-                        num = rand.Next(0, 9);
-                    }
+                //If the cell is Free
+                if (Results[num] == MarkType.Free)
+                {
+                    button = FindButton(num);
+                    Results[num] = MarkType.Nought;     //Update the results array
+                    button.Content = "0";               //Display a Nought on the computer's cell
+                    button.Foreground = Brushes.Red;
+                    ValidMove = true;                   //Exit the loop, a free a cell has been found and updated
                 }
-                PlayerTurn = true;          //Player to play next
+                else
+                {
+                    num = rand.Next(0, 9);
+                }
+                PlayerTurn = true;                      //Player to play next
             }
             
         }
 
         private Button FindButton(int index)
         {
+            //An Array of all the buttons, the computer will use this array for the random play
             Button[] button = { Button0_0, Button0_1, Button0_2, Button1_0, Button1_1, Button1_2, Button2_0, Button2_1, Button2_2 };
 
+            //Declare and initialize row and column
             int row = 0;
             int column = 0;
 
+            //Find the column value using the given random number (index)
+            //The column value can be assumed using the position of the index
             if (index <= 2)
                 column = 0;
             else if (index > 2 && index <= 5)
@@ -145,10 +146,11 @@ namespace Tic_Tac_Toe
             else
                 column = 2;
 
-            row = (index - column) / 3;
+            row = (index - column) / 3;                 //Calculate the row from the column and index values
 
-            string s = $"Button{row}_{column}";
+            string s = $"Button{row}_{column}";         //Create a string equavalent for the buttons
 
+            //Find and assign the button
             for (int i = 0; i < button.Length; i++)
             {
                 if (button[i].Name.ToString() == s)
@@ -157,7 +159,7 @@ namespace Tic_Tac_Toe
                 }
             }
 
-            return Btn;
+            return Btn;     //Return the right button picked by the computer
         }
     }
 }
