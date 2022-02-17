@@ -94,8 +94,10 @@ namespace Tic_Tac_Toe
                 button.Content = "X";                   //Update the button content
                 PlayerTurn = false;                     //Computer to play next
             }
-            
-            
+            if (!PlayerTurn)
+            {
+                ComputerPlay();
+            }
 
         }
 
@@ -109,7 +111,7 @@ namespace Tic_Tac_Toe
             int num = rand.Next(0, 9);
 
             while (!ValidMove)
-                {
+            {
                 //If the cell is Free
                 if (Results[num] == MarkType.Free)
                 {
@@ -118,12 +120,13 @@ namespace Tic_Tac_Toe
                     button.Content = "0";               //Display a Nought on the computer's cell
                     button.Foreground = Brushes.Red;
                     ValidMove = true;                   //Exit the loop, a free a cell has been found and updated
+                    PlayerTurn = true;                      //Player to play next
                 }
                 else
                 {
                     num = rand.Next(0, 9);
                 }
-                PlayerTurn = true;                      //Player to play next
+                
             }
             
         }
@@ -140,13 +143,13 @@ namespace Tic_Tac_Toe
             //Find the column value using the given random number (index)
             //The column value can be assumed using the position of the index
             if (index <= 2)
-                column = 0;
+                row = 0;
             else if (index > 2 && index <= 5)
-                column = 1;
+                row = 1;
             else
-                column = 2;
+                row = 2;
 
-            row = (index - column) / 3;                 //Calculate the row from the column and index values
+            column = index - (3 * row);                 //Calculate the row from the column and index values
 
             string s = $"Button{row}_{column}";         //Create a string equavalent for the buttons
 
@@ -156,6 +159,7 @@ namespace Tic_Tac_Toe
                 if (button[i].Name.ToString() == s)
                 {
                     Btn = button[i];
+                    break;
                 }
             }
 
