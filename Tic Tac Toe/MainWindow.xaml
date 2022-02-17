@@ -29,16 +29,16 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Button x:Name="Button0_0" Grid.Row="0" Grid.Column="0" Content="X"/>
-        <Button x:Name="Button0_1" Grid.Row="0" Grid.Column="1" Content="0"/>
-        <Button x:Name="Button0_2" Grid.Row="0" Grid.Column="2"/>
+        <Button Click="Button_Click" x:Name="Button0_0" Grid.Row="0" Grid.Column="0" Content="X"/>
+        <Button Click="Button_Click" x:Name="Button0_1" Grid.Row="0" Grid.Column="1" Content="0"/>
+        <Button Click="Button_Click" x:Name="Button0_2" Grid.Row="0" Grid.Column="2"/>
 
-        <Button x:Name="Button1_0" Grid.Row="1" Grid.Column="0"/>
-        <Button x:Name="Button1_1" Grid.Row="1" Grid.Column="1"/>
-        <Button x:Name="Button1_2" Grid.Row="1" Grid.Column="2"/>
+        <Button Click="Button_Click" x:Name="Button1_0" Grid.Row="1" Grid.Column="0"/>
+        <Button Click="Button_Click" x:Name="Button1_1" Grid.Row="1" Grid.Column="1"/>
+        <Button Click="Button_Click" x:Name="Button1_2" Grid.Row="1" Grid.Column="2"/>
 
-        <Button x:Name="Button2_0" Grid.Row="2" Grid.Column="0"/>
-        <Button x:Name="Button2_1" Grid.Row="2" Grid.Column="1"/>
-        <Button x:Name="Button2_2" Grid.Row="2" Grid.Column="2"/>
+        <Button Click="Button_Click" x:Name="Button2_0" Grid.Row="2" Grid.Column="0"/>
+        <Button Click="Button_Click" x:Name="Button2_1" Grid.Row="2" Grid.Column="1"/>
+        <Button Click="Button_Click" x:Name="Button2_2" Grid.Row="2" Grid.Column="2"/>
     </Grid>
 </Window>

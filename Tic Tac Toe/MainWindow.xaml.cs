@@ -1,5 +1,8 @@
-﻿using System.Windows;
-
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Tic_Tac_Toe
 {
@@ -24,6 +27,8 @@ namespace Tic_Tac_Toe
         /// </summary>
         private bool GameOver;
 
+        private Button Btn;
+
         #endregion
         #region Constructor
         /// <summary>
@@ -31,11 +36,16 @@ namespace Tic_Tac_Toe
         /// </summary>
         public MainWindow()
         {
+            //Initialize important components 
             InitializeComponent();
             NewGame();
         }
         #endregion
 
+        #region Class Methods
+        /// <summary>
+        /// To initialise the private members immediately at the start of the game
+        /// </summary>
         private void NewGame()
         {
             //Create an array of 9 cells
@@ -44,6 +54,110 @@ namespace Tic_Tac_Toe
             //Make all cells markers Free
             for (int i = 0; i < Results.Length; i++)
                 Results[i] = MarkType.Free;
+
+            //Make sure the Player starts the game
+            PlayerTurn = true;
+
+            //True if the Game has ended and false otherwise
+            GameOver = false;
+
+            //Clear the cells content
+            Container.Children.Cast<Button>().ToList().ForEach(button =>
+            {
+                button.Content = string.Empty;
+                button.Background = Brushes.White;
+                button.Foreground = Brushes.Blue;
+            });
+
+          
+        }
+
+        #endregion
+        /// <summary>
+        /// To Update a clicke cell/button with an appropriate marker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;     //Cast the button to the sender
+
+            if (PlayerTurn)
+            {
+
+                //Find row and column of the clicked cell/button
+                int row = Grid.GetRow(button);          
+                int column = Grid.GetColumn(button);
+
+                int index = column + (row * 3);         //Calculate the index for the Results array
+                Results[index] = MarkType.Cross;        //If it's the Player's turn update the cell with a cross
+                button.Content = "X";                   //Update the button content
+                PlayerTurn = false;                     //Computer to play next
+            }
+            
+            ComputerPlay();       //It is the computer's turn
+
+        }
+
+        private void ComputerPlay()
+        {
+            bool ValidMove = false;     //True when a Free cell has been found
+            Button button;
+
+            //Create a random number for the computer's move
+            Random rand = new();
+            int num = rand.Next(0, 9);
+
+            if (!PlayerTurn)
+            {
+                while (!ValidMove)
+                {
+                    //If the cell is Free
+                    if (Results[num] == MarkType.Free)
+                    {
+                        button = FindButton(num);
+                        Results[num] = MarkType.Nought;     //Update the results array
+                        button.Content = "0";               //Display a Nought on the computer's cell
+                        button.Foreground = Brushes.Red;
+                        ValidMove = true;                   //Exit the loop, a free a cell has been found and updated
+                    }
+                    else
+                    {
+                        num = rand.Next(0, 9);
+                    }
+                }
+                PlayerTurn = true;          //Player to play next
+            }
+            
+        }
+
+        private Button FindButton(int index)
+        {
+            Button[] button = { Button0_0, Button0_1, Button0_2, Button1_0, Button1_1, Button1_2, Button2_0, Button2_1, Button2_2 };
+
+            int row = 0;
+            int column = 0;
+
+            if (index <= 2)
+                column = 0;
+            else if (index > 2 && index <= 5)
+                column = 1;
+            else
+                column = 2;
+
+            row = (index - column) / 3;
+
+            string s = $"Button{row}_{column}";
+
+            for (int i = 0; i < button.Length; i++)
+            {
+                if (button[i].Name.ToString() == s)
+                {
+                    Btn = button[i];
+                }
+            }
+
+            return Btn;
         }
     }
 }
