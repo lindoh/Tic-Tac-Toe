@@ -28,8 +28,8 @@ namespace Tic_Tac_Toe
         private bool GameOver;
 
         private Button Btn;
-
         #endregion
+
         #region Constructor
         /// <summary>
         /// Default Constructor
@@ -82,25 +82,41 @@ namespace Tic_Tac_Toe
         {
             Button button = (Button)sender;     //Cast the button to the sender
 
-            if (PlayerTurn)
+            //If Game ended start a new Game
+            if(GameOver)
+            {
+                NewGame();
+            }
+
+            if (!GameOver && PlayerTurn)
             {
 
                 //Find row and column of the clicked cell/button
                 int row = Grid.GetRow(button);          
                 int column = Grid.GetColumn(button);
-
                 int index = column + (row * 3);         //Calculate the index for the Results array
+
+                if (Results[index] != MarkType.Free)
+                    return;
+
                 Results[index] = MarkType.Cross;        //If it's the Player's turn update the cell with a cross
                 button.Content = "X";                   //Update the button content
                 PlayerTurn = false;                     //Computer to play next
+
+                CheckForWinner();
             }
-            if (!PlayerTurn)
+
+            if (!GameOver && !PlayerTurn)
             {
                 ComputerPlay();
+                CheckForWinner();
             }
 
         }
 
+        /// <summary>
+        /// To manage the computer play
+        /// </summary>
         private void ComputerPlay()
         {
             bool ValidMove = false;     //True when a Free cell has been found
@@ -131,6 +147,11 @@ namespace Tic_Tac_Toe
             
         }
 
+        /// <summary>
+        /// To find the corresponding button using a random number generated
+        /// </summary>
+        /// <param name="index">The random number which corresponds to the cell numbers (0 - 8)</param>
+        /// <returns></returns>
         private Button FindButton(int index)
         {
             //An Array of all the buttons, the computer will use this array for the random play
@@ -150,11 +171,10 @@ namespace Tic_Tac_Toe
                 row = 2;
 
             column = index - (3 * row);                 //Calculate the row from the column and index values
-
             string s = $"Button{row}_{column}";         //Create a string equavalent for the buttons
 
             //Find and assign the button
-            for (int i = 0; i < button.Length; i++)
+            for (int i = 0; i < button.Length; i++) 
             {
                 if (button[i].Name.ToString() == s)
                 {
@@ -164,6 +184,96 @@ namespace Tic_Tac_Toe
             }
 
             return Btn;     //Return the right button picked by the computer
+        }
+
+        /// <summary>
+        /// Find out who won the game and highlight the winning cells
+        /// And Restart the game on the next click
+        /// </summary>
+        private void CheckForWinner()
+        {
+            //-------------------------------------Check the Horizontal combinations---------------------------------
+            if ((Results[0] != MarkType.Free) && ((Results[0] & Results[1] & Results[2]) == Results[0]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button0_0.Background = Button0_1.Background = Button0_2.Background = Brushes.Green;
+            }
+            else if ((Results[3] != MarkType.Free) && ((Results[3] & Results[4] & Results[5]) == Results[3]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button1_0.Background = Button1_1.Background = Button1_2.Background = Brushes.Green;
+            }
+            else if ((Results[6] != MarkType.Free) && ((Results[6] & Results[7] & Results[8]) == Results[6]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button2_0.Background = Button2_1.Background = Button2_2.Background = Brushes.Green;
+            }
+
+            //-------------------------------------Check the Vertical combinations---------------------------------
+            if ((Results[0] != MarkType.Free) && ((Results[0] & Results[3] & Results[6]) == Results[0]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button0_0.Background = Button1_0.Background = Button2_0.Background = Brushes.Green;
+            }
+            else if ((Results[1] != MarkType.Free) && ((Results[1] & Results[4] & Results[7]) == Results[1]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button0_1.Background = Button1_1.Background = Button2_1.Background = Brushes.Green;
+            }
+            else if ((Results[2] != MarkType.Free) && ((Results[2] & Results[5] & Results[8]) == Results[2]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button0_2.Background = Button1_2.Background = Button2_2.Background = Brushes.Green;
+            }
+
+            //-------------------------------------Check the Diagonal combinations---------------------------------
+            if ((Results[0] != MarkType.Free) && ((Results[0] & Results[4] & Results[8]) == Results[0]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button0_0.Background = Button1_1.Background = Button2_2.Background = Brushes.Green;
+            }
+            else if ((Results[2] != MarkType.Free) && ((Results[2] & Results[4] & Results[6]) == Results[2]))
+            {
+                GameOver = true;         //Game has ended
+
+                //Highlight the winning cells
+                Button0_2.Background = Button1_1.Background = Button2_0.Background = Brushes.Green;
+            }
+
+            //-------------------------------------If There is no winner---------------------------------
+            bool NoWinner = false;
+
+            for (int i = 0; i < Results.Length; i++)
+            {
+                if (Results[i] == MarkType.Free)
+                    return;
+
+                if (i + 1>= Results.Length)
+                    NoWinner = true;
+            }
+
+            if (!GameOver && NoWinner)
+            {
+                Container.Children.Cast<Button>().ToList().ForEach(button =>
+                {
+                    GameOver = true;
+                    button.Background = Brushes.Orange;
+                });
+            }
         }
     }
 }
